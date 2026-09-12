@@ -38,6 +38,9 @@ exports.createOrder = async (req, res, next) => {
 
     for (const item of rawItems) {
       const pId = item.productId || item.product?._id || item.product;
+      if (!pId || !/^[0-9a-fA-F]{24}$/.test(String(pId))) {
+        return res.status(400).json({ message: 'One of the products in your bag is no longer available. Please refresh your bag.' });
+      }
       const product = await Product.findById(pId);
       if (!product || !product.isActive) {
         return res.status(400).json({ message: `Product is no longer available` });

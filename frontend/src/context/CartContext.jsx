@@ -34,6 +34,18 @@ export function CartProvider({ children }) {
     }
   }, [cart, user]);
 
+  // Remove offline fallback cards from a guest cart once the API is available.
+  useEffect(() => {
+    if (user) return;
+    setCart((prev) => {
+      const items = (prev.items || []).filter((item) => {
+        const productId = item.product?._id || item.product;
+        return /^[0-9a-fA-F]{24}$/.test(String(productId));
+      });
+      return items.length === (prev.items || []).length ? prev : { ...prev, items };
+    });
+  }, [user]);
+
   const refreshCart = useCallback(async () => {
     if (!user) return;
     setLoading(true);
