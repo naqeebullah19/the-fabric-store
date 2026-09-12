@@ -81,10 +81,111 @@ const CURATED_COLLECTIONS = [
   },
 ];
 
+const DISCOUNT_BANDS = [
+  { label: '10% Discount', query: 'minPrice=1', tone: 'bg-[#f7eee9]' },
+  { label: '15% Discount', query: 'maxPrice=5000', tone: 'bg-[#f2e4e4]' },
+  { label: '20% Discount', query: 'minPrice=5000&maxPrice=8000', tone: 'bg-[#eee6dc]' },
+  { label: '25% Discount', query: 'minPrice=8000', tone: 'bg-[#e8e2d8]' },
+  { label: '30% Discount', query: 'maxPrice=3500', tone: 'bg-[#eadfe1]' },
+];
+
+const FALLBACK_PRODUCT_IMAGES = [
+  'https://www.thefabricstore.pk/cdn/shop/files/FSP1365-PURPLE_2_600x.jpg?v=1781870527',
+  'https://www.thefabricstore.pk/cdn/shop/files/FSE719-YELLOW_2_600x.jpg?v=1781870517',
+  'https://www.thefabricstore.pk/cdn/shop/files/FSE719-ICE-BLUE_2_600x.jpg?v=1781870506',
+  'https://www.thefabricstore.pk/cdn/shop/files/FSE710-PURPLE_2_600x.jpg?v=1781870498',
+  'https://www.thefabricstore.pk/cdn/shop/files/FSE709-GREY_2_600x.jpg?v=1781870489',
+  'https://www.thefabricstore.pk/cdn/shop/files/FSP1445-ICE-BLUE_2_600x.jpg?v=1781870450',
+];
+
+function createFallbackProducts(prefix, names, fabric, categorySlug) {
+  return names.map((name, index) => ({
+    _id: `homepage-${prefix}-${index}`,
+    slug: `homepage-${prefix}-${index}`,
+    name,
+    fabric,
+    pieces: index % 2 === 0 ? 3 : 2,
+    price: 2899 + index * 650,
+    compareAtPrice: 4999 + index * 900,
+    images: [FALLBACK_PRODUCT_IMAGES[index % FALLBACK_PRODUCT_IMAGES.length]],
+    category: { name: categorySlug.replace(/-/g, ' '), slug: categorySlug },
+    isNewArrival: prefix === 'summer',
+    totalStock: 12,
+    variants: [{ _id: `homepage-variant-${prefix}-${index}`, size: 'Free Size', color: 'Assorted', stock: 12 }],
+  }));
+}
+
+const FALLBACK_COLLECTIONS = {
+  summer: createFallbackProducts(
+    'summer',
+    ['Printed Lawn 3 Piece Suit', 'Embroidered Lawn 3 Piece', 'Embellished Chiffon 3 Piece', 'Printed Lawn 2 Piece'],
+    'Lawn',
+    'unstitched',
+  ),
+  pret: createFallbackProducts(
+    'pret',
+    ['Printed Lawn Pret 3 Piece', 'Embroidered Pret Lawn', 'Solid Jacquard Co-ord', 'Printed Chiffon Kurti'],
+    'Pret',
+    'ready-to-wear',
+  ),
+  shawl: createFallbackProducts(
+    'shawl',
+    ['Embroidered Lawn Shawl', 'Soft Wool Shawl', 'Semi Pashmina Shawl', 'Karandi Lawn Shawl'],
+    'Shawl',
+    'shawl',
+  ),
+  sale: createFallbackProducts(
+    'sale',
+    ['Printed Lawn Clearance Suit', 'Embroidered Chiffon Sale Edit', 'Printed Khaddar 2 Piece', 'Pashmina Sale Shawl'],
+    'Sale Edit',
+    'sale',
+  ),
+};
+
+function ProductSection({ eyebrow, title, slug, products, fallbackProducts, loading, tone = 'plain' }) {
+  const visibleProducts = products.length > 0 ? products : fallbackProducts;
+
+  return (
+    <section className={`page-shell mt-16 sm:mt-20 ${tone === 'tinted' ? 'py-10 sm:py-14 bg-[#faf6f1]' : ''}`}>
+      <div className="section-heading mb-6">
+        <div>
+          <span className="text-[10px] uppercase tracking-[0.25em] text-brand font-bold">{eyebrow}</span>
+          <h2 className="font-heading text-xl sm:text-2xl font-bold uppercase tracking-wider text-gray-900 mt-0.5">
+            {title}
+          </h2>
+        </div>
+        <Link
+          to={`/category/${slug}`}
+          className="shrink-0 text-xs font-semibold text-brand uppercase tracking-wider hover:underline flex items-center gap-1"
+        >
+          <span>View All</span>
+          <FiArrowRight />
+        </Link>
+      </div>
+
+      {loading && products.length === 0 ? (
+        <ProductGridSkeleton count={4} />
+      ) : visibleProducts.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+          {visibleProducts.map((product) => <ProductCard key={product._id} product={product} />)}
+        </div>
+      ) : (
+        <div className="border border-dashed border-gray-300 py-10 text-center text-xs text-gray-500">
+          New pieces are being added to this collection.
+        </div>
+      )}
+    </section>
+  );
+}
+
 export default function Home() {
   const [featured, setFeatured] = useState(null);
   const [bestSellers, setBestSellers] = useState(null);
   const [newArrivals, setNewArrivals] = useState(null);
+  const [pretCollection, setPretCollection] = useState(null);
+  const [shawls, setShawls] = useState(null);
+  const [summerCollection, setSummerCollection] = useState(null);
+  const [saleCollection, setSaleCollection] = useState(null);
   const [activeSlide, setActiveSlide] = useState(0);
 
   // Auto carousel slide timer
@@ -111,6 +212,20 @@ export default function Home() {
       .get('/products', { params: { category: 'new-arrivals', limit: 4 } })
       .then((r) => setNewArrivals(r.data.products || []))
       .catch(() => setNewArrivals([]));
+
+    const collections = [
+      { category: 'ready-to-wear', setter: setPretCollection },
+      { category: 'shawl', setter: setShawls },
+      { category: 'unstitched', setter: setSummerCollection },
+      { category: 'sale', setter: setSaleCollection },
+    ];
+
+    collections.forEach(({ category, setter }) => {
+      api
+        .get('/products', { params: { category, limit: 4 } })
+        .then((r) => setter(r.data.products || []))
+        .catch(() => setter([]));
+    });
   }, []);
 
   const slide = HERO_SLIDES[activeSlide];
@@ -301,7 +416,62 @@ export default function Home() {
         )}
       </section>
 
-      {/* 6. Brand Story & Campaign Banner */}
+      {/* 6. Original-style discount navigation */}
+      <section className="page-shell mt-16 sm:mt-20">
+        <div className="section-heading mb-5">
+          <div>
+            <span className="text-[10px] uppercase tracking-[0.25em] text-brand font-bold">Sale By Discount</span>
+            <h2 className="font-heading text-xl sm:text-2xl font-bold uppercase tracking-wider text-gray-900 mt-0.5">
+              Shop the markdowns
+            </h2>
+          </div>
+          <Link to="/category/sale" className="text-xs font-semibold text-brand uppercase tracking-wider hover:underline">
+            View All Sale
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3">
+          {DISCOUNT_BANDS.map((band) => (
+            <Link
+              key={band.label}
+              to={`/category/sale?${band.query}`}
+              className={`${band.tone} min-h-20 sm:min-h-24 flex items-center justify-center text-center px-3 text-xs sm:text-sm font-bold uppercase tracking-[0.14em] text-gray-900 hover:bg-brand hover:text-white transition-colors`}
+            >
+              {band.label}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <ProductSection
+        eyebrow="Pret / Unstitched"
+        title="Summer Collection '26"
+        slug="unstitched"
+        products={summerCollection || []}
+        fallbackProducts={FALLBACK_COLLECTIONS.summer}
+        loading={summerCollection === null}
+        tone="tinted"
+      />
+
+      <ProductSection
+        eyebrow="For the elegant summer woman"
+        title="Pret Unstitched"
+        slug="ready-to-wear"
+        products={pretCollection || []}
+        fallbackProducts={FALLBACK_COLLECTIONS.pret}
+        loading={pretCollection === null}
+      />
+
+      <ProductSection
+        eyebrow="Soft layers, rich textures"
+        title="Shawl"
+        slug="shawl"
+        products={shawls || []}
+        fallbackProducts={FALLBACK_COLLECTIONS.shawl}
+        loading={shawls === null}
+        tone="tinted"
+      />
+
+      {/* 10. Brand Story & Campaign Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 mt-16 sm:mt-24">
         <div className="grid md:grid-cols-2 overflow-hidden rounded-xl bg-[#241a1c] text-white shadow-xl">
           <div
@@ -341,34 +511,24 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. Best Sellers Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 mt-16 sm:mt-20">
-        <div className="flex items-center justify-between mb-6 pb-2 border-b border-gray-200">
-          <div>
-            <span className="text-[10px] uppercase tracking-[0.25em] text-brand font-bold">Customer Favorites</span>
-            <h2 className="font-heading text-xl sm:text-2xl font-bold uppercase tracking-wider text-gray-900 mt-0.5">
-              Best Sellers
-            </h2>
-          </div>
-          <Link
-            to="/category/ready-to-wear"
-            className="text-xs font-semibold text-brand uppercase tracking-wider hover:underline flex items-center gap-1"
-          >
-            <span>View All</span>
-            <FiArrowRight />
-          </Link>
-        </div>
+      <ProductSection
+        eyebrow="Customer favorites"
+        title="Best Selling"
+        slug="ready-to-wear"
+        products={bestSellers || []}
+        fallbackProducts={FALLBACK_COLLECTIONS.pret}
+        loading={bestSellers === null}
+      />
 
-        {bestSellers === null ? (
-          <ProductGridSkeleton count={4} />
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-            {bestSellers.map((p) => (
-              <ProductCard key={p._id} product={p} />
-            ))}
-          </div>
-        )}
-      </section>
+      <ProductSection
+        eyebrow="Clearance edit"
+        title="Sale Collection"
+        slug="sale"
+        products={saleCollection || []}
+        fallbackProducts={FALLBACK_COLLECTIONS.sale}
+        loading={saleCollection === null}
+        tone="tinted"
+      />
 
       {/* 8. Floating Action Buttons (WhatsApp & Scroll Top) */}
       <div className="fixed bottom-5 left-5 z-40 flex flex-col gap-3">
