@@ -1,13 +1,13 @@
-# The Fashion Store — Women's Clothing E-Commerce (MERN)
+# The Fashion Store  Women's Clothing E-Commerce (MERN)
 
 A production-style clone/upgrade of thefabricstore.pk, built with the MERN stack
 (MongoDB, Express, React, Node.js) per the 25-day development plan. This package
-contains the full, working codebase for every phase of that plan — you just need to
+contains the full, working codebase for every phase of that plan you just need to
 add your own MongoDB Atlas and Cloudinary credentials and run it.
 
 ## What's included
 
-**Backend** (`/backend`) — Node.js + Express + MongoDB (Mongoose)
+**Backend** (`/backend`)  Node.js + Express + MongoDB (Mongoose)
 - JWT authentication with bcrypt password hashing and role-based access control
   (customer / admin / superadmin)
 - Product & category CRUD with Cloudinary image uploads and stock-tracked variants
@@ -21,7 +21,7 @@ add your own MongoDB Atlas and Cloudinary credentials and run it.
 - Seed script that populates categories + ~30 sample products modeled on a real
   unstitched/pret/formal/shawl catalog, plus a super-admin account
 
-**Frontend** (`/frontend`) — React (Vite) + Tailwind CSS + React Router
+**Frontend** (`/frontend`) React (Vite) + Tailwind CSS + React Router
 - Header/footer matching the plan's nav (Sale, Unstitched, Ready To Wear, Formal,
   Shawl, New Arrivals) with mobile hamburger menu
 - Home page: hero banners, category grid, featured & best-seller sections
@@ -68,14 +68,9 @@ npm run dev
   name/API key/secret from the dashboard, put them in `backend/.env`.
 - After running `npm run seed`, log in as the super-admin using the email/password
   you set in `SUPER_ADMIN_EMAIL` / `SUPER_ADMIN_PASSWORD` (defaults to
-  `admin@tfsclone.com` / `ChangeMe123!` — change this immediately).
+  `admin@tfsclone.com` / `ChangeMe123!`  change this immediately).
 
-### 4. Deployment (matches the plan's Day 25)
-- **Frontend → Vercel**: import the `frontend` folder as a Vite project, set
-  `VITE_API_URL` to your deployed backend URL.
-- **Backend → Railway** (or Render/Fly.io): import the `backend` folder, set the
-  same environment variables from `.env.example`, expose port from `PORT`.
-- Update `CLIENT_URL` in the backend env to your deployed frontend URL for CORS.
+
 
 ## Project structure
 ```
@@ -97,12 +92,4 @@ tfs-clone/
         └── pages/admin/    # Admin dashboard, product/order/category managers
 ```
 
-## Notes
-- Placeholder product photos (picsum.photos) are used in the seed data — replace
-  them by uploading real photos through the admin panel (they'll go to Cloudinary).
-- Shipping is free above Rs. 3,000 and Rs. 250 otherwise, matching the reference
-  site's promo banner — adjust `SHIPPING_FEE`/`FREE_SHIPPING_THRESHOLD` in
-  `backend/controllers/orderController.js` as needed.
-- This was generated as a complete starter codebase, not a tested/deployed app —
-  run `npm install` in both folders and fix any dependency-version hiccups as they
-  come up before going to production.
+
