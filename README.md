@@ -35,7 +35,7 @@ add your own MongoDB Atlas and Cloudinary credentials and run it.
 - Loading skeletons, empty states, toast notifications, mobile-responsive throughout
 
 ## Improvements over the reference site
-- Full wishlist, star-rating reviews, and real-time stock/out-of-stock display —
+- Full wishlist, star-rating reviews, and real-time stock/out-of-stock display
   all missing on the reference site
 - Multi-filter product browsing (size + price + sort) combined in one view
 - Fast MongoDB full-text search instead of a slow catalog crawl
