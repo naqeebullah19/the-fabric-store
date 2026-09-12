@@ -1,0 +1,530 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  FiSearch,
+  FiHeart,
+  FiShoppingBag,
+  FiUser,
+  FiMenu,
+  FiX,
+  FiPhone,
+  FiTruck,
+  FiChevronDown,
+} from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
+import api from '../api/client';
+
+const NAV_ITEMS = [
+  {
+    label: 'Sale',
+    to: '/category/sale',
+    isSale: true,
+    columns: [
+      {
+        title: 'Discounts',
+        items: [
+          { label: 'All Sale Items', to: '/category/sale' },
+          { label: 'Under Rs. 3,500', to: '/category/sale?maxPrice=3500' },
+          { label: 'Under Rs. 5,000', to: '/category/sale?maxPrice=5000' },
+          { label: 'Luxury Clearance', to: '/category/sale?minPrice=5000' },
+        ],
+      },
+      {
+        title: 'Shop By Type',
+        items: [
+          { label: 'Unstitched Sale', to: '/category/unstitched?category=sale' },
+          { label: 'Ready To Wear Sale', to: '/category/ready-to-wear?category=sale' },
+          { label: 'Shawls On Sale', to: '/category/shawl?category=sale' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Unstitched',
+    to: '/category/unstitched',
+    columns: [
+      {
+        title: 'By Piece',
+        items: [
+          { label: 'All Unstitched', to: '/category/unstitched' },
+          { label: '1 Piece Suits', to: '/category/unstitched?pieces=1' },
+          { label: '2 Piece Suits', to: '/category/unstitched?pieces=2' },
+          { label: '3 Piece Suits', to: '/category/unstitched?pieces=3' },
+        ],
+      },
+      {
+        title: 'By Fabric',
+        items: [
+          { label: 'Lawn Suits', to: '/category/unstitched?fabric=Lawn' },
+          { label: 'Chiffon Suits', to: '/category/unstitched?fabric=Chiffon' },
+          { label: 'Khaddar Suits', to: '/category/unstitched?fabric=Khaddar' },
+          { label: 'Karandi Suits', to: '/category/unstitched?fabric=Karandi' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Ready To Wear',
+    to: '/category/ready-to-wear',
+    columns: [
+      {
+        title: 'Pret Collection',
+        items: [
+          { label: 'All Ready To Wear', to: '/category/ready-to-wear' },
+          { label: '1 Piece Kurtis', to: '/category/ready-to-wear?pieces=1' },
+          { label: '2 Piece Co-ords', to: '/category/ready-to-wear?pieces=2' },
+          { label: '3 Piece Stitched Suits', to: '/category/ready-to-wear?pieces=3' },
+        ],
+      },
+      {
+        title: 'Fabrics & Silhouettes',
+        items: [
+          { label: 'Pret Lawn', to: '/category/ready-to-wear?fabric=Lawn' },
+          { label: 'Pret Jacquard', to: '/category/ready-to-wear?fabric=Jacquard' },
+          { label: 'Pret Karandi', to: '/category/ready-to-wear?fabric=Karandi' },
+          { label: 'Pret Cambric', to: '/category/ready-to-wear?fabric=Cambric' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Formal',
+    to: '/category/formal',
+    columns: [
+      {
+        title: 'Occasion Wear',
+        items: [
+          { label: 'All Formals', to: '/category/formal' },
+          { label: 'Luxury Chiffon', to: '/category/formal?fabric=Chiffon' },
+          { label: 'Embellished Net', to: '/category/formal?fabric=Net' },
+          { label: 'Festive 3 Pcs', to: '/category/formal?pieces=3' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Shawl',
+    to: '/category/shawl',
+    columns: [
+      {
+        title: 'Winter Shawls',
+        items: [
+          { label: 'All Shawls', to: '/category/shawl' },
+          { label: 'Pure Wool Shawls', to: '/category/shawl?fabric=Wool' },
+          { label: 'Pashmina Touch', to: '/category/shawl?fabric=Pashmina' },
+          { label: 'Velvet Shawls', to: '/category/shawl?fabric=Velvet' },
+          { label: 'Karandi Shawls', to: '/category/shawl?fabric=Karandi' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'New Arrivals',
+    to: '/category/new-arrivals',
+    isNew: true,
+  },
+];
+
+const BRAND_LOGO = 'https://www.thefabricstore.pk/cdn/shop/files/The-Fabric-Store-final-logo-black_white_200x@2x.svg?v=1704781392';
+
+export default function Header() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+
+  const { user, logout, isAdmin } = useAuth();
+  const { itemCount, openCartDrawer } = useCart();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchRef = useRef(null);
+
+  // Live search debounce
+  useEffect(() => {
+    if (!query.trim() || query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setSearchLoading(true);
+      try {
+        const res = await api.get('/products/search', { params: { q: query, limit: 5 } });
+        setSearchResults(res.data.products || []);
+      } catch {
+        setSearchResults([]);
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  // Close search and mobile drawer on route changes
+  useEffect(() => {
+    setSearchOpen(false);
+    setMobileOpen(false);
+    setQuery('');
+  }, [location.pathname]);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      setSearchOpen(false);
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  return (
+    <header className="sticky top-0 z-40 bg-white shadow-sm font-body">
+      {/* Top Announcement Bar */}
+      <div className="bg-[#1f191a] text-white text-[10px] sm:text-xs py-2 px-3 tracking-wider">
+        <div className="page-shell flex items-center justify-between">
+          <div className="hidden sm:flex items-center gap-2 text-white/80">
+            <FiPhone className="text-brand-light text-xs" />
+            <span>Order Assistance / WhatsApp: <strong>0300-0606664</strong></span>
+          </div>
+          <div className="text-center flex-1 sm:flex-initial uppercase font-medium tracking-[0.1em] text-amber-200">
+            Stock clearance sale is live | Flat 50% & 40% off | Free delivery above Rs. 3,000
+          </div>
+          <div className="flex items-center gap-4 text-white/80">
+            <Link to="/track-order" className="hover:text-white flex items-center gap-1 transition-colors">
+              <FiTruck className="text-xs" />
+              <span>Track Order</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Navbar */}
+      <div className="page-shell flex items-center justify-between min-h-[4.5rem] py-2.5 border-b border-gray-100">
+        {/* Mobile Hamburger */}
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="lg:hidden p-2 -ml-2 text-2xl text-gray-800 hover:text-brand transition-colors"
+          aria-label="Open mobile menu"
+        >
+          {mobileOpen ? <FiX /> : <FiMenu />}
+        </button>
+
+        {/* Brand Logo */}
+        <Link to="/" className="flex items-center group min-w-0">
+          <img src={BRAND_LOGO} alt="The Fabric Store Pakistan" className="w-36 sm:w-48 h-auto object-contain shrink-0" />
+        </Link>
+
+        {/* Desktop Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-7 text-xs font-semibold uppercase tracking-[0.18em]">
+          {NAV_ITEMS.map((item) => (
+            <div key={item.label} className="mega-menu-trigger relative h-full py-4">
+              <Link
+                to={item.to}
+                className={`relative flex items-center gap-1 transition-colors hover:text-brand ${
+                  item.isSale ? 'text-[#c02b3c] font-bold' : item.isNew ? 'text-brand font-bold' : 'text-gray-800'
+                } ${location.pathname === item.to ? 'text-brand' : ''}`}
+              >
+                {item.label}
+                {item.columns && <FiChevronDown className="text-[10px] opacity-60" />}
+                <span
+                  className={`absolute -bottom-1 left-0 h-0.5 bg-brand transition-all duration-300 ${
+                    location.pathname === item.to ? 'w-full' : 'w-0 hover:w-full'
+                  }`}
+                />
+              </Link>
+
+              {/* Mega Menu Dropdown */}
+              {item.columns && (
+                <div className="mega-menu fixed left-0 right-0 top-[5.25rem] z-50 w-screen bg-white border-t-2 border-brand border-b border-gray-200 px-8 py-8 shadow-2xl">
+                  <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+                    {item.columns.map((col) => (
+                      <div key={col.title}>
+                        <h4 className="font-heading text-xs font-black uppercase tracking-[0.22em] text-[#8a2b3d] border-b-2 border-brand/30 pb-2 mb-3.5">
+                          {col.title}
+                        </h4>
+                        <ul className="space-y-1">
+                          {col.items.map((sub) => (
+                            <li key={sub.label}>
+                              <Link
+                                to={sub.to}
+                                className="text-[13.5px] font-semibold text-gray-900 hover:text-brand hover:translate-x-1.5 transition-all inline-block tracking-wide py-1"
+                              >
+                                {sub.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                    {/* Visual campaign mini-card in mega menu */}
+                    <div className="col-span-1 md:col-span-2 bg-[#f8f5f0] border border-gray-200/90 p-4 rounded-lg flex items-center gap-4">
+                      <img
+                        src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=300&q=80"
+                        alt="Collection Spotlight"
+                        className="w-20 h-24 object-cover rounded shadow-sm"
+                      />
+                      <div>
+                        <span className="text-[10px] uppercase tracking-[0.2em] text-brand font-bold">
+                          Exclusive Edit
+                        </span>
+                        <h5 className="font-heading text-sm font-semibold text-gray-900 mt-0.5">
+                          Luxury Unstitched & Pret
+                        </h5>
+                        <p className="text-[11px] text-gray-600 mt-1 line-clamp-2">
+                          Discover vibrant handpicked prints, premium lawn and rich chiffon formal wear.
+                        </p>
+                        <Link
+                          to={item.to}
+                          className="text-[11px] font-bold text-brand uppercase tracking-wider mt-2 inline-block hover:underline"
+                        >
+                          Explore Collection &rarr;
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        {/* Right Utility Icons */}
+        <div className="flex items-center gap-0.5 sm:gap-3 text-gray-800 shrink-0">
+          {/* Search Trigger */}
+          <button
+            onClick={() => setSearchOpen(!searchOpen)}
+            className="p-2 rounded-full hover:bg-gray-100 hover:text-brand transition-colors text-lg"
+            aria-label="Search catalog"
+          >
+            <FiSearch />
+          </button>
+
+          {/* Wishlist Link */}
+          <Link
+            to="/wishlist"
+            className="p-2 rounded-full hover:bg-gray-100 hover:text-brand transition-colors text-lg relative"
+            aria-label="Saved items"
+          >
+            <FiHeart />
+          </Link>
+
+          {/* Cart Bag with Drawer Trigger */}
+          <button
+            onClick={openCartDrawer}
+            className="p-2 rounded-full hover:bg-gray-100 hover:text-brand transition-colors text-lg relative"
+            aria-label="Shopping bag"
+          >
+            <FiShoppingBag />
+            {itemCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-brand text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
+                {itemCount}
+              </span>
+            )}
+          </button>
+
+          {/* Account Dropdown */}
+          <div className="relative group hidden sm:block">
+            <button
+              className="p-2 rounded-full hover:bg-gray-100 hover:text-brand transition-colors text-lg"
+              aria-label="User account"
+            >
+              <FiUser />
+            </button>
+            <div className="absolute right-0 top-full hidden group-hover:block bg-white shadow-xl border border-gray-100 rounded-lg py-2 w-48 text-xs z-50">
+              {user ? (
+                <>
+                  <div className="px-4 py-2 border-b border-gray-100 font-semibold text-gray-900 truncate">
+                    Hello, {user.name.split(' ')[0]}
+                  </div>
+                  <Link to="/orders" className="block px-4 py-2 hover:bg-cream hover:text-brand">
+                    My Orders
+                  </Link>
+                  <Link to="/wishlist" className="block px-4 py-2 hover:bg-cream hover:text-brand">
+                    My Wishlist
+                  </Link>
+                  {isAdmin && (
+                    <Link to="/admin" className="block px-4 py-2 text-brand font-semibold hover:bg-cream">
+                      Admin Dashboard
+                    </Link>
+                  )}
+                  <button
+                    onClick={logout}
+                    className="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600 border-t border-gray-100 mt-1"
+                  >
+                    Log Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="block px-4 py-2 font-semibold hover:bg-cream hover:text-brand">
+                    Sign In
+                  </Link>
+                  <Link to="/signup" className="block px-4 py-2 hover:bg-cream hover:text-brand">
+                    Create Account
+                  </Link>
+                  <div className="border-t border-gray-100 my-1" />
+                  <Link to="/track-order" className="block px-4 py-2 text-gray-600 hover:bg-cream">
+                    Track Order
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Live Predictive Search Bar Overlay */}
+      {searchOpen && (
+        <div className="border-b border-gray-200 bg-white py-4 px-4 shadow-lg animate-slide-down">
+          <div className="max-w-3xl mx-auto">
+            <form onSubmit={handleSearchSubmit} className="relative flex items-center">
+              <FiSearch className="absolute left-4 text-gray-400 text-lg" />
+              <input
+                ref={searchRef}
+                autoFocus
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search by suit name, fabric (Lawn, Chiffon, Shawl), or style..."
+                className="w-full pl-12 pr-24 py-3 bg-gray-50 border border-gray-300 rounded-full text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+              />
+              <button
+                type="submit"
+                className="absolute right-2 bg-brand text-white text-xs uppercase tracking-wider font-semibold px-4 py-2 rounded-full hover:bg-brand-dark transition-colors"
+              >
+                Search
+              </button>
+            </form>
+
+            {/* Live Search Results Dropdown */}
+            {query.length >= 2 && (
+              <div className="mt-3 bg-white rounded-lg border border-gray-200 shadow-xl overflow-hidden divide-y divide-gray-100">
+                {searchLoading ? (
+                  <div className="p-4 text-center text-xs text-gray-500">Searching catalog...</div>
+                ) : searchResults.length === 0 ? (
+                  <div className="p-4 text-center text-xs text-gray-500">
+                    No matching suits found for "{query}". Try searching for 'Lawn', 'Chiffon', or 'Shawl'.
+                  </div>
+                ) : (
+                  <>
+                    <div className="p-2 bg-gray-50 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                      Matching Products ({searchResults.length})
+                    </div>
+                    {searchResults.map((p) => (
+                      <Link
+                        key={p._id}
+                        to={`/product/${p.slug}`}
+                        onClick={() => setSearchOpen(false)}
+                        className="flex items-center gap-3 p-3 hover:bg-cream transition-colors"
+                      >
+                        <img
+                          src={p.images?.[0]}
+                          alt=""
+                          className="w-12 h-14 object-cover rounded bg-gray-100"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold text-gray-900 truncate">{p.name}</p>
+                          <p className="text-[11px] text-gray-500">
+                            {p.fabric} {p.pieces ? `· ${p.pieces} Piece` : ''}
+                          </p>
+                        </div>
+                        <span className="font-bold text-xs text-brand">
+                          Rs. {p.price?.toLocaleString()}
+                        </span>
+                      </Link>
+                    ))}
+                    <Link
+                      to={`/search?q=${encodeURIComponent(query)}`}
+                      onClick={() => setSearchOpen(false)}
+                      className="block p-2.5 text-center text-xs font-semibold text-brand bg-brand/5 hover:bg-brand/10 transition-colors uppercase tracking-wider"
+                    >
+                      View all results &rarr;
+                    </Link>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Drawer Menu */}
+      {mobileOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex">
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div className="relative w-4/5 max-w-sm bg-white h-full shadow-2xl flex flex-col z-10 overflow-y-auto">
+            <div className="p-4 border-b flex items-center justify-between">
+              <span className="font-heading font-bold text-lg text-brand uppercase tracking-wider">
+                The Fabric Store
+              </span>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="p-1 text-2xl text-gray-600"
+                aria-label="Close menu"
+              >
+                <FiX />
+              </button>
+            </div>
+
+            <div className="py-2 divide-y divide-gray-100 text-sm">
+              {NAV_ITEMS.map((item) => (
+                <div key={item.label} className="p-3">
+                  <Link
+                    to={item.to}
+                    onClick={() => setMobileOpen(false)}
+                    className={`block font-semibold uppercase tracking-wider ${
+                      item.isSale ? 'text-red-600' : 'text-gray-900'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                  {item.columns && (
+                    <div className="pl-3 pt-2 space-y-1.5">
+                      {item.columns.flatMap((c) => c.items).slice(0, 4).map((sub) => (
+                        <Link
+                          key={sub.label}
+                          to={sub.to}
+                          onClick={() => setMobileOpen(false)}
+                          className="block text-xs font-semibold text-gray-700 hover:text-brand"
+                        >
+                          {sub.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-auto p-4 border-t bg-cream text-xs space-y-2">
+              <Link to="/track-order" onClick={() => setMobileOpen(false)} className="block font-medium">
+                Track Order
+              </Link>
+              {user ? (
+                <>
+                  <Link to="/orders" onClick={() => setMobileOpen(false)} className="block font-medium">
+                    My Orders
+                  </Link>
+                  <button onClick={logout} className="block text-red-600 font-medium">
+                    Log Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" onClick={() => setMobileOpen(false)} className="block font-medium">
+                    Log In
+                  </Link>
+                  <Link to="/signup" onClick={() => setMobileOpen(false)} className="block font-medium">
+                    Register
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}

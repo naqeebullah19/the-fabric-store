@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-body text-gray-800 bg-white;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+@layer components {
+  .page-shell {
+    @apply w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10;
+  }
+
+  .section-heading {
+    @apply flex items-end justify-between gap-4 border-b border-gray-200 pb-3;
+  }
+}
+
+.mega-menu {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.22), 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+.mega-menu-trigger:hover .mega-menu,
+.mega-menu-trigger:focus-within .mega-menu {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  visibility: visible;
+  opacity: 1 !important;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+h1, h2, h3, h4 {
+  @apply font-heading;
+}
+
+/* Simple skeleton loading animation used across the app */
+.skeleton {
+  @apply animate-pulse bg-gray-200 rounded;
+}
+
+/* Toast + focus rings kept minimal since react-hot-toast handles most UI */
+.btn-primary {
+  @apply bg-brand text-white px-5 py-2.5 rounded-md font-medium hover:bg-brand-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+}
+.btn-outline {
+  @apply border border-brand text-brand px-5 py-2.5 rounded-md font-medium hover:bg-brand hover:text-white transition-colors;
+}
+.input {
+  @apply w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand;
+}
+
+@media (max-width: 1023px) {
+  .mega-menu-trigger {
+    height: auto;
+  }
+}
+
+@media (max-width: 639px) {
+  .btn-primary, .btn-outline {
+    @apply px-4;
+  }
+
+  .section-heading {
+    @apply items-start;
+  }
+}
