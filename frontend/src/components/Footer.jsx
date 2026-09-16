@@ -1,15 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  FiFacebook,
-  FiInstagram,
-  FiPhone,
-  FiMail,
-  FiMapPin,
-  FiClock,
-  FiTruck,
-  FiShield,
-} from 'react-icons/fi';
+import { FiMail, FiTruck } from 'react-icons/fi';
+import { FaFacebookF, FaInstagram, FaTiktok } from 'react-icons/fa';
 
 const BRAND_LOGO = 'https://www.thefabricstore.pk/cdn/shop/files/The-Fabric-Store-final-logo-black_white_200x@2x.svg?v=1704781392';
 
@@ -38,7 +30,7 @@ export default function Footer() {
               aria-label="Facebook"
               className="footer-social"
             >
-              <FiFacebook className="text-sm" />
+              <FaFacebookF className="text-sm" />
             </a>
             <a
               href="https://instagram.com"
@@ -47,7 +39,16 @@ export default function Footer() {
               aria-label="Instagram"
               className="footer-social"
             >
-              <FiInstagram className="text-sm" />
+              <FaInstagram className="text-sm" />
+            </a>
+            <a
+              href="https://tiktok.com"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="TikTok"
+              className="footer-social"
+            >
+              <FaTiktok className="text-sm" />
             </a>
           </div>
         </div>
@@ -127,24 +128,10 @@ export default function Footer() {
           </h4>
           <ul className="space-y-3 text-[#746e68]">
             <li className="flex items-start gap-2.5">
-              <FiPhone className="text-brand text-base shrink-0 mt-0.5" />
-              <div>
-                <span className="block font-bold text-[#24211f]">0300-0606664</span>
-                <span className="text-[11px] text-[#746e68]">Call & WhatsApp Support</span>
-              </div>
-            </li>
-            <li className="flex items-start gap-2.5">
               <FiMail className="text-brand text-base shrink-0 mt-0.5" />
               <div>
                 <span className="block font-bold text-[#24211f]">support@thefabricstore.pk</span>
                 <span className="text-[11px] text-[#746e68]">Inquiries & Corporate Orders</span>
-              </div>
-            </li>
-            <li className="flex items-start gap-2.5">
-              <FiClock className="text-brand text-base shrink-0 mt-0.5" />
-              <div>
-                <span className="block font-bold text-[#24211f]">Mon – Sat: 10:00 AM – 9:00 PM</span>
-                <span className="text-[11px] text-[#746e68]">Pakistan Standard Time (PKT)</span>
               </div>
             </li>
           </ul>

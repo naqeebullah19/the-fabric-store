@@ -224,29 +224,35 @@ h1, h2, h3, h4 {
 }
 
 .footer-social {
-  @apply relative isolate overflow-hidden flex items-center justify-center w-8 h-8 border border-[#24211f] text-[#24211f];
-  border-radius: 9999px;
-  transition: color 420ms cubic-bezier(0.22, 1, 0.36, 1), background-color 420ms ease;
+  @apply flex items-center justify-center w-8 h-8 text-[#746e68];
+  transition: color 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms ease;
 }
 
-.footer-social::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: #24211f;
-  transform: scaleX(1);
-  transform-origin: right center;
-  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+.footer-social svg {
+  fill: #24211f !important;
+  stroke: #24211f !important;
+  stroke-width: 0 !important;
+  opacity: 1;
+  transition: fill 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 420ms ease;
+}
+
+.footer-social svg * {
+  fill: #24211f !important;
+  stroke: none !important;
 }
 
 .footer-social:hover {
   color: #24211f;
-  background: transparent;
+  transform: translateY(-2px);
 }
 
-.footer-social:hover::before {
-  transform: scaleX(0);
+.footer-social:hover svg {
+  fill: #24211f !important;
+  transform: scale(1.12);
+}
+
+.footer-social:hover svg * {
+  fill: #24211f !important;
 }
 
 @media (max-width: 1023px) {
