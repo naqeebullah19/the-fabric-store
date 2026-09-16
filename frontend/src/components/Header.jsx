@@ -308,7 +308,7 @@ export default function Header() {
             >
               <FiUser />
             </button>
-            <div className="absolute right-0 top-full hidden group-hover:block bg-white shadow-xl border border-gray-100 rounded-lg py-2 w-48 text-xs z-50">
+            <div className="absolute right-0 top-full hidden group-hover:block bg-white text-[#24211f] shadow-xl border border-gray-100 rounded-lg py-2 w-48 text-xs z-50">
               {user ? (
                 <>
                   <div className="px-4 py-2 border-b border-gray-100 font-semibold text-gray-900 truncate">
@@ -341,7 +341,7 @@ export default function Header() {
                     Create Account
                   </Link>
                   <div className="border-t border-gray-100 my-1" />
-                  <Link to="/track-order" className="block px-4 py-2 text-gray-600 hover:bg-cream">
+                  <Link to="/track-order" className="block px-4 py-2 text-[#24211f] hover:bg-cream hover:text-brand">
                     Track Order
                   </Link>
                 </>
