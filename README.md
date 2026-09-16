@@ -71,11 +71,15 @@ npm run dev
   `admin@tfsclone.com` / `ChangeMe123!` — change this immediately).
 
 ### 4. Deployment (matches the plan's Day 25)
-- **Frontend → Vercel**: import the `frontend` folder as a Vite project, set
-  `VITE_API_URL` to your deployed backend URL.
+- **Frontend → Vercel**: import the `frontend` folder as a Vite project. Vercel
+  detects the Vite build automatically. The included `frontend/vercel.json` keeps
+  React Router routes working on refresh. Set the project environment variable
+  `VITE_API_URL` to your deployed backend URL, including `/api` (for example,
+  `https://your-backend-domain.com/api`), then redeploy.
 - **Backend → Railway** (or Render/Fly.io): import the `backend` folder, set the
   same environment variables from `.env.example`, expose port from `PORT`.
-- Update `CLIENT_URL` in the backend env to your deployed frontend URL for CORS.
+- Update `CLIENT_URL` in the backend env to your deployed frontend URL for CORS,
+  then redeploy the backend. Do not use the local `frontend/.env` value in production.
 
 ## Project structure
 ```
