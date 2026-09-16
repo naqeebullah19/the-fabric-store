@@ -7,8 +7,6 @@ import {
   FiUser,
   FiMenu,
   FiX,
-  FiPhone,
-  FiTruck,
   FiChevronDown,
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
@@ -168,25 +166,6 @@ export default function Header() {
           : 'bg-[#f7f5f1] border-[var(--line)] text-[#24211f] shadow-sm'
       }`}
     >
-      {/* Top Announcement Bar */}
-      <div className="bg-[var(--ink)] text-white text-[10px] sm:text-xs py-2.5 px-3 tracking-wider">
-        <div className="page-shell flex items-center justify-between">
-          <div className="hidden sm:flex items-center gap-2 text-white/80">
-            <FiPhone className="text-brand-light text-xs" />
-            <span>Order Assistance / WhatsApp: <strong>0300-0606664</strong></span>
-          </div>
-          <div className="text-center flex-1 sm:flex-initial uppercase font-medium tracking-[0.14em] text-white/85">
-            Stock clearance sale is live | Flat 50% & 40% off | Free delivery above Rs. 3,000
-          </div>
-          <div className="flex items-center gap-4 text-white/80">
-            <Link to="/track-order" className="hover:text-white flex items-center gap-1 transition-colors">
-              <FiTruck className="text-xs" />
-              <span>Track Order</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-
       {/* Main Navbar */}
       <div className="page-shell relative flex items-center justify-between min-h-[5rem] py-3">
         {/* Mobile Hamburger */}
