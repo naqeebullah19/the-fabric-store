@@ -8,6 +8,7 @@ import {
   FiMenu,
   FiX,
   FiChevronDown,
+  FiChevronRight,
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -430,76 +431,58 @@ export default function Header() {
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/55 backdrop-blur-[2px]"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="relative w-4/5 max-w-sm bg-white h-full shadow-2xl flex flex-col z-10 overflow-y-auto">
-            <div className="p-4 border-b flex items-center justify-between">
-              <span className="font-heading font-bold text-lg text-brand uppercase tracking-wider">
-                The Fabric Store
-              </span>
+          <div className="relative w-[88%] max-w-sm bg-white h-full shadow-2xl flex flex-col z-10 overflow-y-auto animate-slide-in-left">
+            <div className="h-20 px-7 flex items-center justify-between border-b border-gray-100">
+              <span className="text-[11px] uppercase tracking-[0.28em] text-gray-400">Menu</span>
               <button
                 onClick={() => setMobileOpen(false)}
-                className="p-1 text-2xl text-gray-600"
+                className="p-1 text-3xl font-light text-[#24211f] hover:text-brand transition-colors"
                 aria-label="Close menu"
               >
                 <FiX />
               </button>
             </div>
 
-            <div className="py-2 divide-y divide-gray-100 text-sm">
+            <nav className="px-7 py-5 text-[#24211f]">
               {NAV_ITEMS.map((item) => (
-                <div key={item.label} className="p-3">
+                <div key={item.label} className="border-b border-gray-100 last:border-0">
                   <Link
                     to={item.to}
                     onClick={() => setMobileOpen(false)}
-                    className={`block font-semibold uppercase tracking-wider ${
-                      item.isSale ? 'text-red-600' : 'text-gray-900'
-                    }`}
+                    className="flex items-center justify-between py-5 text-[15px] uppercase tracking-[0.2em] hover:text-brand transition-colors"
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    {item.columns && <FiChevronRight className="text-xl text-gray-500" />}
                   </Link>
-                  {item.columns && (
-                    <div className="pl-3 pt-2 space-y-1.5">
-                      {item.columns.flatMap((c) => c.items).slice(0, 4).map((sub) => (
-                        <Link
-                          key={sub.label}
-                          to={sub.to}
-                          onClick={() => setMobileOpen(false)}
-                          className="block text-xs font-semibold text-gray-700 hover:text-brand"
-                        >
-                          {sub.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ))}
-            </div>
+            </nav>
 
-            <div className="mt-auto p-4 border-t bg-cream text-xs space-y-2">
-              <Link to="/track-order" onClick={() => setMobileOpen(false)} className="block font-medium">
-                Track Order
-              </Link>
+            <div className="mt-auto border-t border-gray-200 text-[#24211f]">
+              <div className="px-7 py-6">
               {user ? (
                 <>
-                  <Link to="/orders" onClick={() => setMobileOpen(false)} className="block font-medium">
-                    My Orders
+                  <Link to="/orders" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 text-[13px] uppercase tracking-[0.2em] hover:text-brand">
+                    <FiUser className="text-xl" /> My Orders
                   </Link>
-                  <button onClick={logout} className="block text-red-600 font-medium">
+                  <button onClick={logout} className="mt-5 text-[11px] uppercase tracking-[0.2em] text-red-600">
                     Log Out
                   </button>
                 </>
               ) : (
-                <>
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="block font-medium">
-                    Log In
+                <Link to="/login" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 text-[13px] uppercase tracking-[0.2em] hover:text-brand">
+                    <FiUser className="text-xl" /> Log In
                   </Link>
-                  <Link to="/signup" onClick={() => setMobileOpen(false)} className="block font-medium">
-                    Register
-                  </Link>
-                </>
               )}
+              </div>
+              <div className="border-t border-gray-200 px-7 py-6 flex items-center gap-4 text-[13px] uppercase tracking-[0.2em] text-gray-600">
+                <span className="text-lg">🇺🇸</span>
+                <span>USD $</span>
+                <FiChevronDown className="text-lg" />
+              </div>
             </div>
           </div>
         </div>
