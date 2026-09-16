@@ -15,17 +15,17 @@ const BRAND_LOGO = 'https://www.thefabricstore.pk/cdn/shop/files/The-Fabric-Stor
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1a1415] text-white mt-20 border-t border-brand/20 font-body">
+    <footer className="bg-[#f7f5f1] text-[#24211f] mt-24 border-t border-[var(--line)] font-body">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-xs">
         {/* Brand Bio */}
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <img src={BRAND_LOGO} alt="The Fabric Store Pakistan" className="w-12 h-auto brightness-0 invert" />
+            <img src={BRAND_LOGO} alt="The Fabric Store Pakistan" className="w-12 h-auto" />
             <h4 className="font-heading text-lg font-bold tracking-widest uppercase">
               The Fabric Store
             </h4>
           </div>
-          <p className="text-white/70 leading-relaxed">
+          <p className="text-[#746e68] leading-relaxed">
             Established in 2016 with over 35 retail outlets across Pakistan and a worldwide online store. TFS is
             dedicated to bringing you the finest unstitched lawn, festive embroidered formals, ready-to-wear kurtis,
             and winter shawls.
@@ -36,7 +36,7 @@ export default function Footer() {
               target="_blank"
               rel="noreferrer"
               aria-label="Facebook"
-              className="w-8 h-8 rounded-full bg-white/10 hover:bg-brand flex items-center justify-center transition-colors"
+              className="footer-social"
             >
               <FiFacebook className="text-sm" />
             </a>
@@ -45,7 +45,7 @@ export default function Footer() {
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"
-              className="w-8 h-8 rounded-full bg-white/10 hover:bg-brand flex items-center justify-center transition-colors"
+              className="footer-social"
             >
               <FiInstagram className="text-sm" />
             </a>
@@ -54,37 +54,37 @@ export default function Footer() {
 
         {/* Collections */}
         <div>
-          <h4 className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-amber-200 mb-4 pb-1 border-b border-white/10">
+          <h4 className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-[#24211f] mb-4 pb-1 border-b border-[var(--line)]">
             Shop Collections
           </h4>
-          <ul className="space-y-2.5 text-white/75">
+          <ul className="space-y-2.5 text-[#746e68]">
             <li>
-              <Link to="/category/sale" className="hover:text-amber-200 transition-colors text-red-400 font-semibold">
+              <Link to="/category/sale" className="footer-link text-[#a3263d] font-semibold">
                 Clearance Sale (Up to 50% Off)
               </Link>
             </li>
             <li>
-              <Link to="/category/unstitched" className="hover:text-amber-200 transition-colors">
+              <Link to="/category/unstitched" className="footer-link">
                 Unstitched Lawn & Chiffon
               </Link>
             </li>
             <li>
-              <Link to="/category/ready-to-wear" className="hover:text-amber-200 transition-colors">
+              <Link to="/category/ready-to-wear" className="footer-link">
                 Ready To Wear Pret
               </Link>
             </li>
             <li>
-              <Link to="/category/formal" className="hover:text-amber-200 transition-colors">
+              <Link to="/category/formal" className="footer-link">
                 Luxury Festive Formals
               </Link>
             </li>
             <li>
-              <Link to="/category/shawl" className="hover:text-amber-200 transition-colors">
+              <Link to="/category/shawl" className="footer-link">
                 Winter Wool & Pashmina Shawls
               </Link>
             </li>
             <li>
-              <Link to="/category/new-arrivals" className="hover:text-amber-200 transition-colors">
+              <Link to="/category/new-arrivals" className="footer-link">
                 New Arrivals
               </Link>
             </li>
@@ -93,58 +93,58 @@ export default function Footer() {
 
         {/* Customer Care */}
         <div>
-          <h4 className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-amber-200 mb-4 pb-1 border-b border-white/10">
+          <h4 className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-[#24211f] mb-4 pb-1 border-b border-[var(--line)]">
             Customer Care
           </h4>
-          <ul className="space-y-2.5 text-white/75">
+          <ul className="space-y-2.5 text-[#746e68]">
             <li>
-              <Link to="/track-order" className="hover:text-amber-200 transition-colors flex items-center gap-1.5">
+              <Link to="/track-order" className="footer-link flex items-center gap-1.5">
                 <FiTruck />
                 <span>Track Your Shipment</span>
               </Link>
             </li>
             <li>
-              <Link to="/orders" className="hover:text-amber-200 transition-colors">
+              <Link to="/orders" className="footer-link">
                 Order History & Invoices
               </Link>
             </li>
             <li>
-              <span className="text-white/60">Nationwide Free Shipping (Above Rs. 3,000)</span>
+              <span className="text-[#746e68]">Nationwide Free Shipping (Above Rs. 3,000)</span>
             </li>
             <li>
-              <span className="text-white/60">7-Day Return / Exchange Policy</span>
+              <span className="text-[#746e68]">7-Day Return / Exchange Policy</span>
             </li>
             <li>
-              <span className="text-white/60">Cash on Delivery (COD) Across Pakistan</span>
+              <span className="text-[#746e68]">Cash on Delivery (COD) Across Pakistan</span>
             </li>
           </ul>
         </div>
 
         {/* Head Office & WhatsApp Support */}
         <div>
-          <h4 className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-amber-200 mb-4 pb-1 border-b border-white/10">
+          <h4 className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-[#24211f] mb-4 pb-1 border-b border-[var(--line)]">
             Contact & Support
           </h4>
-          <ul className="space-y-3 text-white/75">
+          <ul className="space-y-3 text-[#746e68]">
             <li className="flex items-start gap-2.5">
-              <FiPhone className="text-brand-light text-base shrink-0 mt-0.5" />
+              <FiPhone className="text-brand text-base shrink-0 mt-0.5" />
               <div>
-                <span className="block font-bold text-white">0300-0606664</span>
-                <span className="text-[11px] text-white/60">Call & WhatsApp Support</span>
+                <span className="block font-bold text-[#24211f]">0300-0606664</span>
+                <span className="text-[11px] text-[#746e68]">Call & WhatsApp Support</span>
               </div>
             </li>
             <li className="flex items-start gap-2.5">
-              <FiMail className="text-brand-light text-base shrink-0 mt-0.5" />
+              <FiMail className="text-brand text-base shrink-0 mt-0.5" />
               <div>
-                <span className="block font-bold text-white">support@thefabricstore.pk</span>
-                <span className="text-[11px] text-white/60">Inquiries & Corporate Orders</span>
+                <span className="block font-bold text-[#24211f]">support@thefabricstore.pk</span>
+                <span className="text-[11px] text-[#746e68]">Inquiries & Corporate Orders</span>
               </div>
             </li>
             <li className="flex items-start gap-2.5">
-              <FiClock className="text-brand-light text-base shrink-0 mt-0.5" />
+              <FiClock className="text-brand text-base shrink-0 mt-0.5" />
               <div>
-                <span className="block font-bold text-white">Mon – Sat: 10:00 AM – 9:00 PM</span>
-                <span className="text-[11px] text-white/60">Pakistan Standard Time (PKT)</span>
+                <span className="block font-bold text-[#24211f]">Mon – Sat: 10:00 AM – 9:00 PM</span>
+                <span className="text-[11px] text-[#746e68]">Pakistan Standard Time (PKT)</span>
               </div>
             </li>
           </ul>
@@ -152,8 +152,8 @@ export default function Footer() {
       </div>
 
       {/* Bottom Copyright & Trust Strip */}
-      <div className="border-t border-white/10 py-6 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-white/50">
+      <div className="border-t border-[var(--line)] py-6 px-4">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#746e68]">
           <p>&copy; {new Date().getFullYear()} The Fabric Store Pakistan (TFS) by EGI Pvt Ltd. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <span>Cash on Delivery (COD)</span>

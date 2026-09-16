@@ -36,19 +36,19 @@ export default function CartDrawer() {
     <div className="fixed inset-0 z-50 flex justify-end">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+        className="fixed inset-0 bg-black/35 backdrop-blur-[2px] transition-opacity duration-500"
         onClick={closeCartDrawer}
         aria-hidden="true"
       />
 
       {/* Drawer Panel */}
-      <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col z-10 animate-slide-in-right">
+      <div className="relative w-full max-w-md bg-[var(--paper)] h-full shadow-2xl flex flex-col z-10 animate-slide-in-right border-l border-[var(--line)]">
         {/* Drawer Header */}
-        <div className="px-5 py-4 border-b flex items-center justify-between">
+        <div className="px-6 py-5 border-b border-[var(--line)] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FiShoppingBag className="text-xl text-brand" />
-            <h2 className="font-heading font-bold text-lg tracking-wide uppercase">Shopping Bag</h2>
-            <span className="text-xs bg-brand/10 text-brand px-2 py-0.5 rounded-full font-semibold">
+            <h2 className="font-heading font-medium text-xl tracking-wide">Your bag</h2>
+            <span className="text-[10px] border border-[var(--line)] text-gray-600 px-2 py-0.5 rounded-full font-semibold">
               {itemCount}
             </span>
           </div>
@@ -62,7 +62,7 @@ export default function CartDrawer() {
         </div>
 
         {/* Free Shipping Progress Bar */}
-        <div className="bg-[#fcf9f5] border-b px-5 py-3 text-xs">
+        <div className="bg-white/60 border-b border-[var(--line)] px-6 py-4 text-xs">
           {subtotal >= freeShippingThreshold ? (
             <div className="flex items-center gap-2 text-emerald-700 font-medium">
               <FiCheckCircle className="text-base shrink-0" />
@@ -88,7 +88,7 @@ export default function CartDrawer() {
         </div>
 
         {/* Items List */}
-        <div className="flex-1 overflow-y-auto px-5 py-4 divide-y divide-gray-100">
+        <div className="flex-1 overflow-y-auto px-6 py-4 divide-y divide-[var(--line)]">
           {cart.items?.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center py-12">
               <div className="w-16 h-16 rounded-full bg-brand/10 flex items-center justify-center text-brand mb-4 text-2xl">
@@ -121,7 +121,7 @@ export default function CartDrawer() {
                   <img
                     src={image}
                     alt={item.product?.name}
-                    className="w-20 h-24 object-cover rounded bg-gray-100 shrink-0 border border-gray-100"
+                    className="w-20 h-24 object-cover bg-gray-100 shrink-0 border border-[var(--line)]"
                   />
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>
@@ -181,7 +181,7 @@ export default function CartDrawer() {
 
         {/* Drawer Footer */}
         {cart.items?.length > 0 && (
-          <div className="border-t border-gray-200 px-5 py-4 bg-white shadow-inner space-y-3">
+          <div className="border-t border-[var(--line)] px-6 py-5 bg-white/75 shadow-inner space-y-3">
             {/* Optional order note toggle */}
             <div>
               <button
@@ -215,14 +215,14 @@ export default function CartDrawer() {
             <div className="space-y-2 pt-1">
               <button
                 onClick={handleCheckout}
-                className="w-full bg-brand hover:bg-brand-dark text-white font-semibold py-3 px-4 rounded text-xs uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-2 shadow"
+                className="prestige-button-black w-full gap-2 py-3.5 px-4 shadow"
               >
                 <span>Proceed to Checkout</span>
                 <span>&rarr;</span>
               </button>
               <button
                 onClick={handleViewCart}
-                className="w-full border border-gray-300 hover:border-gray-900 text-gray-800 font-semibold py-2.5 px-4 rounded text-xs uppercase tracking-[0.14em] transition-colors"
+                className="prestige-button-white w-full py-3 px-4"
               >
                 View Bag ({itemCount})
               </button>

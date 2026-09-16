@@ -17,28 +17,9 @@ import api from '../api/client';
 
 const NAV_ITEMS = [
   {
-    label: 'Sale',
-    to: '/category/sale',
-    isSale: true,
-    columns: [
-      {
-        title: 'Discounts',
-        items: [
-          { label: 'All Sale Items', to: '/category/sale' },
-          { label: 'Under Rs. 3,500', to: '/category/sale?maxPrice=3500' },
-          { label: 'Under Rs. 5,000', to: '/category/sale?maxPrice=5000' },
-          { label: 'Luxury Clearance', to: '/category/sale?minPrice=5000' },
-        ],
-      },
-      {
-        title: 'Shop By Type',
-        items: [
-          { label: 'Unstitched Sale', to: '/category/unstitched?category=sale' },
-          { label: 'Ready To Wear Sale', to: '/category/ready-to-wear?category=sale' },
-          { label: 'Shawls On Sale', to: '/category/shawl?category=sale' },
-        ],
-      },
-    ],
+    label: 'New Arrivals',
+    to: '/category/new-arrivals',
+    isNew: true,
   },
   {
     label: 'Unstitched',
@@ -119,11 +100,6 @@ const NAV_ITEMS = [
       },
     ],
   },
-  {
-    label: 'New Arrivals',
-    to: '/category/new-arrivals',
-    isNew: true,
-  },
 ];
 
 const BRAND_LOGO = 'https://www.thefabricstore.pk/cdn/shop/files/The-Fabric-Store-final-logo-black_white_200x@2x.svg?v=1704781392';
@@ -134,6 +110,7 @@ export default function Header() {
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const { user, logout, isAdmin } = useAuth();
   const { itemCount, openCartDrawer } = useCart();
@@ -168,6 +145,13 @@ export default function Header() {
     setQuery('');
   }, [location.pathname]);
 
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 24);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (query.trim()) {
@@ -177,15 +161,21 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white shadow-sm font-body">
+    <header
+      className={`${location.pathname === '/' ? 'fixed top-0 left-0 right-0' : 'sticky top-0'} z-40 border-b font-body transition-all duration-500 ${
+        location.pathname === '/' && !scrolled
+          ? 'bg-transparent border-transparent text-white'
+          : 'bg-[#f7f5f1] border-[var(--line)] text-[#24211f] shadow-sm'
+      }`}
+    >
       {/* Top Announcement Bar */}
-      <div className="bg-[#1f191a] text-white text-[10px] sm:text-xs py-2 px-3 tracking-wider">
+      <div className="bg-[var(--ink)] text-white text-[10px] sm:text-xs py-2.5 px-3 tracking-wider">
         <div className="page-shell flex items-center justify-between">
           <div className="hidden sm:flex items-center gap-2 text-white/80">
             <FiPhone className="text-brand-light text-xs" />
             <span>Order Assistance / WhatsApp: <strong>0300-0606664</strong></span>
           </div>
-          <div className="text-center flex-1 sm:flex-initial uppercase font-medium tracking-[0.1em] text-amber-200">
+          <div className="text-center flex-1 sm:flex-initial uppercase font-medium tracking-[0.14em] text-white/85">
             Stock clearance sale is live | Flat 50% & 40% off | Free delivery above Rs. 3,000
           </div>
           <div className="flex items-center gap-4 text-white/80">
@@ -198,7 +188,7 @@ export default function Header() {
       </div>
 
       {/* Main Navbar */}
-      <div className="page-shell flex items-center justify-between min-h-[4.5rem] py-2.5 border-b border-gray-100">
+      <div className="page-shell relative flex items-center justify-between min-h-[5rem] py-3">
         {/* Mobile Hamburger */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -209,18 +199,24 @@ export default function Header() {
         </button>
 
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center group min-w-0">
+        <Link to="/" className="flex items-center group min-w-0 lg:absolute lg:left-1/2 lg:-translate-x-1/2">
           <img src={BRAND_LOGO} alt="The Fabric Store Pakistan" className="w-36 sm:w-48 h-auto object-contain shrink-0" />
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-7 text-xs font-semibold uppercase tracking-[0.18em]">
+        <nav className="hidden lg:flex lg:absolute lg:left-12 lg:right-1/2 lg:mr-24 items-center gap-6 text-[11px] font-semibold uppercase tracking-[0.16em]">
           {NAV_ITEMS.map((item) => (
             <div key={item.label} className="mega-menu-trigger relative h-full py-4">
               <Link
                 to={item.to}
                 className={`relative flex items-center gap-1 transition-colors hover:text-brand ${
-                  item.isSale ? 'text-[#c02b3c] font-bold' : item.isNew ? 'text-brand font-bold' : 'text-gray-800'
+                  item.isSale
+                    ? 'text-[#f3a0b0] font-bold'
+                    : item.isNew
+                      ? 'text-[#f3c7cf] font-bold'
+                      : location.pathname === '/' && !scrolled
+                        ? 'text-white'
+                        : 'text-[#24211f]'
                 } ${location.pathname === item.to ? 'text-brand' : ''}`}
               >
                 {item.label}
@@ -288,11 +284,15 @@ export default function Header() {
         </nav>
 
         {/* Right Utility Icons */}
-        <div className="flex items-center gap-0.5 sm:gap-3 text-gray-800 shrink-0">
+        <div
+          className={`flex items-center gap-0.5 sm:gap-3 shrink-0 lg:ml-auto ${
+            location.pathname === '/' && !scrolled ? 'text-white' : 'text-gray-800'
+          }`}
+        >
           {/* Search Trigger */}
           <button
             onClick={() => setSearchOpen(!searchOpen)}
-            className="p-2 rounded-full hover:bg-gray-100 hover:text-brand transition-colors text-lg"
+            className="p-2 hover:text-brand transition-colors text-lg"
             aria-label="Search catalog"
           >
             <FiSearch />
@@ -301,7 +301,7 @@ export default function Header() {
           {/* Wishlist Link */}
           <Link
             to="/wishlist"
-            className="p-2 rounded-full hover:bg-gray-100 hover:text-brand transition-colors text-lg relative"
+            className="p-2 hover:text-brand transition-colors text-lg relative"
             aria-label="Saved items"
           >
             <FiHeart />
@@ -310,7 +310,7 @@ export default function Header() {
           {/* Cart Bag with Drawer Trigger */}
           <button
             onClick={openCartDrawer}
-            className="p-2 rounded-full hover:bg-gray-100 hover:text-brand transition-colors text-lg relative"
+            className="p-2 hover:text-brand transition-colors text-lg relative"
             aria-label="Shopping bag"
           >
             <FiShoppingBag />

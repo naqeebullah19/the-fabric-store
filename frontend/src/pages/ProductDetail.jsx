@@ -315,7 +315,7 @@ export default function ProductDetail() {
               <button
                 onClick={handleAddToCart}
                 disabled={outOfStock}
-                className="flex-1 h-12 bg-brand hover:bg-brand-dark text-white font-semibold rounded text-xs uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2 shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                className="prestige-button-black flex-1 h-12 gap-2 shadow disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FiShoppingBag className="text-base" />
                 <span>{outOfStock ? 'Sold Out' : 'Add to Bag'}</span>

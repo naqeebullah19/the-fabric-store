@@ -5,15 +5,15 @@ export default {
     extend: {
       colors: {
         brand: {
-          DEFAULT: '#8a2b3d', // deep maroon — fashion-forward, matches women's clothing branding
-          light: '#b14a5e',
-          dark: '#5f1c29',
+          DEFAULT: '#7d2f3e',
+          light: '#a85c6a',
+          dark: '#54202b',
         },
-        cream: '#faf6f1',
+        cream: '#f7f5f1',
       },
       fontFamily: {
-        heading: ['"Playfair Display"', 'serif'],
-        body: ['"Poppins"', 'sans-serif'],
+        heading: ['"Fraunces"', 'serif'],
+        body: ['"DM Sans"', 'sans-serif'],
       },
     },
   },

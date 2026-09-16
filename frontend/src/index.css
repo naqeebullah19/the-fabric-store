@@ -1,9 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --ink: #24211f;
+  --muted: #746e68;
+  --paper: #f7f5f1;
+  --line: #dedad3;
+  --accent: #7d2f3e;
+  --accent-dark: #54202b;
+}
+
 body {
-  @apply font-body text-gray-800 bg-white;
+  @apply font-body text-gray-800;
+  background: var(--paper);
   overflow-x: hidden;
 }
 
@@ -16,33 +28,47 @@ img {
   max-width: 100%;
 }
 
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+button, a, input, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a {
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @layer components {
   .page-shell {
-    @apply w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10;
+    @apply w-full max-w-[1480px] mx-auto px-5 sm:px-8 lg:px-12;
   }
 
   .section-heading {
-    @apply flex items-end justify-between gap-4 border-b border-gray-200 pb-3;
+    @apply flex items-end justify-between gap-4 border-b pb-4;
+    border-color: var(--line);
   }
 }
 
 .mega-menu {
-  background-color: #ffffff !important;
-  background: #ffffff !important;
+  background-color: var(--paper) !important;
+  background: var(--paper) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   visibility: hidden;
   opacity: 0;
   transform: translateY(-4px);
   pointer-events: none;
-  transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.22), 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+  transition: opacity 260ms ease, transform 260ms ease, visibility 260ms ease;
+  box-shadow: 0 22px 55px rgba(36, 33, 31, 0.13);
 }
 
 .mega-menu-trigger:hover .mega-menu,
 .mega-menu-trigger:focus-within .mega-menu {
-  background-color: #ffffff !important;
-  background: #ffffff !important;
+  background-color: var(--paper) !important;
+  background: var(--paper) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   visibility: visible;
@@ -51,11 +77,9 @@ img {
   pointer-events: auto;
 }
 
-button, a {
-  -webkit-tap-highlight-color: transparent;
-}
 h1, h2, h3, h4 {
   @apply font-heading;
+  letter-spacing: -0.02em;
 }
 
 /* Simple skeleton loading animation used across the app */
@@ -65,13 +89,164 @@ h1, h2, h3, h4 {
 
 /* Toast + focus rings kept minimal since react-hot-toast handles most UI */
 .btn-primary {
-  @apply bg-brand text-white px-5 py-2.5 rounded-md font-medium hover:bg-brand-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply relative isolate overflow-hidden border border-[#24211f] bg-transparent text-white px-5 py-3 font-medium disabled:opacity-50 disabled:cursor-not-allowed;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.7rem;
 }
+
+.btn-primary::before,
+.btn-outline::before,
+.prestige-button-black::before,
+.prestige-button-white::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  transform: scaleX(1);
+  transform-origin: right center;
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-primary::before,
+.prestige-button-black::before {
+  background: #24211f;
+}
+
+.btn-outline::before,
+.prestige-button-white::before {
+  background: #fff;
+}
+
+.btn-primary:hover::before,
+.btn-outline:hover::before,
+.prestige-button-black:hover::before,
+.prestige-button-white:hover::before {
+  transform: scaleX(0);
+}
+
+.btn-primary:hover {
+  color: #24211f;
+  background: transparent;
+}
+
 .btn-outline {
-  @apply border border-brand text-brand px-5 py-2.5 rounded-md font-medium hover:bg-brand hover:text-white transition-colors;
+  @apply relative isolate overflow-hidden border border-[#24211f] bg-transparent text-[#24211f] px-5 py-3 font-medium;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.7rem;
+}
+
+.btn-outline:hover {
+  color: #24211f;
+  background: transparent;
+}
+
+.prestige-button-black,
+.prestige-button-white {
+  @apply relative isolate overflow-hidden inline-flex items-center justify-center;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  transition: color 520ms cubic-bezier(0.22, 1, 0.36, 1), background-color 520ms ease;
+}
+
+.prestige-button-black {
+  @apply border border-[#24211f] bg-transparent text-white;
+}
+
+.prestige-button-white {
+  @apply border border-white bg-transparent text-[#24211f];
+}
+
+.prestige-button-black:hover,
+.prestige-button-white:hover {
+  background: transparent;
 }
 .input {
-  @apply w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand;
+  @apply w-full border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand;
+}
+
+.editorial-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.editorial-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 1.2rem;
+  bottom: -0.35rem;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0.35);
+  transform-origin: left;
+  transition: transform 260ms ease;
+}
+
+.editorial-link:hover::after {
+  transform: scaleX(1);
+}
+
+.footer-link {
+  position: relative;
+  display: inline-block;
+  transition: color 260ms ease;
+}
+
+.footer-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.2rem;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer-link:hover {
+  color: var(--accent);
+}
+
+.footer-link:hover::after {
+  transform: scaleX(1);
+}
+
+.footer-social {
+  @apply relative isolate overflow-hidden flex items-center justify-center w-8 h-8 border border-[#24211f] text-[#24211f];
+  border-radius: 9999px;
+  transition: color 420ms cubic-bezier(0.22, 1, 0.36, 1), background-color 420ms ease;
+}
+
+.footer-social::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: #24211f;
+  transform: scaleX(1);
+  transform-origin: right center;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer-social:hover {
+  color: #24211f;
+  background: transparent;
+}
+
+.footer-social:hover::before {
+  transform: scaleX(0);
 }
 
 @media (max-width: 1023px) {

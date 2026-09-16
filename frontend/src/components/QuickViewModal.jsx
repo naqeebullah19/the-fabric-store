@@ -188,7 +188,7 @@ export default function QuickViewModal({ product, onClose }) {
             <button
               onClick={handleAdd}
               disabled={outOfStock}
-              className="w-full bg-brand hover:bg-brand-dark text-white font-semibold py-3 px-4 rounded text-xs uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-2 shadow disabled:opacity-50 disabled:cursor-not-allowed"
+              className="prestige-button-black w-full gap-2 py-3 px-4 shadow disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <FiShoppingBag className="text-base" />
               <span>{outOfStock ? 'Sold Out' : 'Add to Bag'}</span>

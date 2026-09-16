@@ -105,7 +105,7 @@ export default function ProductCard({ product }) {
 
   return (
     <>
-      <div className="group relative flex flex-col h-full bg-white transition-all duration-300">
+      <div className="group relative flex flex-col h-full bg-transparent transition-all duration-500">
         {/* Image Container with Hover Swap */}
         <Link
           to={`/product/${product.slug}`}
@@ -170,7 +170,7 @@ export default function ProductCard({ product }) {
           <div className="absolute bottom-2.5 left-2.5 right-2.5 z-20 hidden sm:flex gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
             <button
               onClick={openQuickView}
-              className="flex-1 flex items-center justify-center gap-1.5 bg-white/95 hover:bg-white text-gray-900 text-xs font-semibold py-2 px-2 rounded shadow transition-colors"
+              className="prestige-button-white flex-1 gap-1.5 py-2.5 px-2 shadow"
               aria-label="Quick View"
             >
               <FiEye className="text-sm" />
@@ -179,7 +179,7 @@ export default function ProductCard({ product }) {
             <button
               onClick={handleQuickAdd}
               disabled={outOfStock}
-              className="flex-1 flex items-center justify-center gap-1.5 bg-brand hover:bg-brand-dark text-white text-xs font-semibold py-2 px-2 rounded shadow transition-colors disabled:opacity-50"
+              className="prestige-button-black flex-1 gap-1.5 py-2.5 px-2 shadow disabled:opacity-50"
               aria-label="Add to bag"
             >
               <FiShoppingBag className="text-sm" />
@@ -192,7 +192,7 @@ export default function ProductCard({ product }) {
         <div className="pt-3 pb-1 flex-1 flex flex-col justify-between">
           <div>
             {/* Fabric & piece category label */}
-            <div className="text-[11px] uppercase tracking-wider text-gray-500 font-medium truncate">
+            <div className="text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] font-medium truncate">
               {product.fabric || 'Luxury Fabric'}
               {product.pieces ? ` · ${product.pieces} Pc Suit` : ''}
             </div>
@@ -200,7 +200,7 @@ export default function ProductCard({ product }) {
             {/* Title */}
             <Link
               to={`/product/${product.slug}`}
-              className="block font-heading text-sm text-gray-900 hover:text-brand font-medium mt-1 line-clamp-2 leading-snug transition-colors"
+              className="block font-heading text-[15px] text-gray-900 hover:text-brand font-medium mt-1 line-clamp-2 leading-snug transition-colors"
             >
               {product.name}
             </Link>
@@ -209,7 +209,7 @@ export default function ProductCard({ product }) {
           {/* Price & Mobile Add Button */}
           <div className="mt-2 pt-1 flex items-center justify-between">
             <div className="flex items-baseline gap-2">
-              <span className="font-semibold text-brand text-sm sm:text-base">
+              <span className="font-semibold text-gray-900 text-sm sm:text-base">
                 Rs. {product.price?.toLocaleString()}
               </span>
               {discount > 0 && (

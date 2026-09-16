@@ -231,7 +231,7 @@ export default function Home() {
   const slide = HERO_SLIDES[activeSlide];
 
   return (
-    <div className="font-body text-gray-900">
+    <div className="font-body text-gray-900 bg-[var(--paper)]">
       {/* 1. Full-Width Editorial Hero Carousel */}
       <section className="relative w-full overflow-hidden bg-black text-white">
         <div className="relative h-[28rem] sm:h-[36rem] lg:h-[42rem]">
@@ -241,12 +241,12 @@ export default function Home() {
             className="absolute inset-0 w-full h-full object-cover object-center transition-all duration-1000"
           />
           {/* Gradient Overlay */}
-          <div className={`absolute inset-0 ${activeSlide === 0 ? 'bg-black/10' : 'bg-gradient-to-r from-black/75 via-black/35 to-transparent'}`} />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/20 to-transparent" />
 
           {/* Slide Text Content */}
           <div className="relative z-10 max-w-7xl mx-auto h-full flex items-end pb-16 sm:pb-24 px-6 sm:px-12">
             <div className={`max-w-xl ${activeSlide === 0 ? 'drop-shadow-lg' : ''}`}>
-              <span className="text-[11px] sm:text-xs uppercase tracking-[0.3em] text-amber-200 font-bold">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.3em] text-white/80 font-bold">
                 {slide.eyebrow}
               </span>
               <h1 className="font-heading text-4xl sm:text-6xl lg:text-7xl font-bold leading-tight mt-2 drop-shadow-md">
@@ -257,7 +257,7 @@ export default function Home() {
               </p>
               <Link
                 to={`/category/${slide.slug}`}
-                className="mt-6 inline-flex items-center gap-2 bg-brand hover:bg-brand-dark text-white text-xs uppercase tracking-[0.2em] font-semibold py-3 px-8 rounded shadow-lg transition-colors"
+                className="prestige-button-white mt-6 gap-2 py-3.5 px-8 shadow-lg"
               >
                 <span>{slide.cta}</span>
                 <FiArrowRight />
@@ -297,33 +297,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. Customer Trust Props Strip */}
-      <section className="bg-[#faf6f1] border-y border-brand/10 py-5 px-4">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-          <div className="flex flex-col items-center">
-            <FiTruck className="text-2xl text-brand mb-1" />
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-900">Free Nationwide Shipping</span>
-            <span className="text-[11px] text-gray-500">On all orders above Rs. 3,000</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <FiShield className="text-2xl text-brand mb-1" />
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-900">100% Original Fabric</span>
-            <span className="text-[11px] text-gray-500">Premium lawn, chiffon & silk guarantee</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <FiRotateCcw className="text-2xl text-brand mb-1" />
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-900">7-Day Easy Exchange</span>
-            <span className="text-[11px] text-gray-500">Hassle-free replacement policy</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <FiMessageCircle className="text-2xl text-[#25D366] mb-1" />
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-900">24/7 WhatsApp Support</span>
-            <span className="text-[11px] text-gray-500">Direct order updates: 0300-0606664</span>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Season Quick Bar */}
+      {/* 2. Season Quick Bar */}
       <section className="page-shell mt-8">
         <div className="flex items-center justify-between border-b border-gray-200 pb-3">
           <span className="text-xs uppercase tracking-[0.2em] font-bold text-brand">Popular Categories</span>
@@ -366,7 +340,7 @@ export default function Home() {
             <Link
               key={c.slug}
               to={`/category/${c.slug}`}
-              className="group relative aspect-[3/4] overflow-hidden rounded bg-gray-100 shadow-sm"
+              className="group relative aspect-[3/4] overflow-hidden bg-gray-100 shadow-sm"
             >
               <img
                 src={c.image}
@@ -434,7 +408,7 @@ export default function Home() {
             <Link
               key={band.label}
               to={`/category/sale?${band.query}`}
-              className={`${band.tone} min-h-20 sm:min-h-24 flex items-center justify-center text-center px-3 text-xs sm:text-sm font-bold uppercase tracking-[0.14em] text-gray-900 hover:bg-brand hover:text-white transition-colors`}
+              className="prestige-button-white min-h-20 sm:min-h-24 w-full px-3 text-xs sm:text-sm"
             >
               {band.label}
             </Link>
@@ -496,13 +470,13 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 to="/category/unstitched"
-                className="bg-white hover:bg-cream text-gray-950 text-xs font-bold uppercase tracking-[0.18em] py-3 px-6 rounded transition-colors"
+                className="prestige-button-white py-3 px-6"
               >
                 Discover Collection
               </Link>
               <Link
                 to="/category/sale"
-                className="border border-white/40 hover:border-white text-white text-xs font-bold uppercase tracking-[0.18em] py-3 px-6 rounded transition-colors"
+                className="prestige-button-black py-3 px-6"
               >
                 View Seasonal Sale
               </Link>
