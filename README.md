@@ -70,16 +70,16 @@ npm run dev
   you set in `SUPER_ADMIN_EMAIL` / `SUPER_ADMIN_PASSWORD` (defaults to
   `admin@tfsclone.com` / `ChangeMe123!` — change this immediately).
 
-### 4. Deployment (matches the plan's Day 25)
-- **Frontend → Vercel**: import the `frontend` folder as a Vite project. Vercel
-  detects the Vite build automatically. The included `frontend/vercel.json` keeps
-  React Router routes working on refresh. Set the project environment variable
-  `VITE_API_URL` to your deployed backend URL, including `/api` (for example,
-  `https://your-backend-domain.com/api`), then redeploy.
-- **Backend → Railway** (or Render/Fly.io): import the `backend` folder, set the
-  same environment variables from `.env.example`, expose port from `PORT`.
-- Update `CLIENT_URL` in the backend env to your deployed frontend URL for CORS,
-  then redeploy the backend. Do not use the local `frontend/.env` value in production.
+### 4. Deployment on Vercel
+- **Multi-service Vercel deployment**: import the repository root. The root
+  `vercel.json` defines the Vite frontend service, the Node backend service, and
+  routes `/api/*` to the backend while sending all other paths to the frontend.
+- Set `VITE_API_URL` to `/api` in the Vercel frontend environment so browser
+  requests use the same Vercel domain and the service rewrite handles them.
+- Set the backend environment variables from your local `backend/.env` in Vercel,
+  including MongoDB, Cloudinary, JWT, and `CLIENT_URL`.
+- Set `CLIENT_URL` to the deployed Vercel URL, then redeploy after changing
+  environment variables. Do not use the local `frontend/.env` value in production.
 
 ## Project structure
 ```
