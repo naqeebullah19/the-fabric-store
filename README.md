@@ -46,8 +46,7 @@ add your own MongoDB Atlas and Cloudinary credentials and run it.
 
 ### 1. Backend
 ```bash
-cd backend
-cp .env.example .env       
+cd backend     
 npm install
 npm run seed               
 npm run dev                  
@@ -55,8 +54,7 @@ npm run dev
 
 ### 2. Frontend
 ```bash
-cd frontend
-cp .env.example .env       
+cd frontend     
 npm install
 npm run dev                
 ```
