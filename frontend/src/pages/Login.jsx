@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+import GoogleAuthButton from '../components/GoogleAuthButton';
 
 export default function Login() {
   const { login } = useAuth();
@@ -36,6 +37,12 @@ export default function Login() {
           {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
+      <div className="my-5 flex items-center gap-3 text-xs text-gray-400">
+        <span className="h-px flex-1 bg-gray-200" />
+        <span>OR</span>
+        <span className="h-px flex-1 bg-gray-200" />
+      </div>
+      <GoogleAuthButton />
       <p className="text-sm text-center mt-4 text-gray-500">
         Don't have an account? <Link to="/signup" className="text-brand font-medium">Sign up</Link>
       </p>

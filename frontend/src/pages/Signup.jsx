@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+import GoogleAuthButton from '../components/GoogleAuthButton';
 
 export default function Signup() {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState({ name: '', email: '', password: '', phone: '' });
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +17,7 @@ export default function Signup() {
     try {
       await register(form.name, form.email, form.password, form.phone);
       toast.success('Account created!');
-      navigate('/');
+      navigate(location.state?.from || '/');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Signup failed');
     } finally {
@@ -39,6 +41,12 @@ export default function Signup() {
           {loading ? 'Creating account...' : 'Sign Up'}
         </button>
       </form>
+      <div className="my-5 flex items-center gap-3 text-xs text-gray-400">
+        <span className="h-px flex-1 bg-gray-200" />
+        <span>OR</span>
+        <span className="h-px flex-1 bg-gray-200" />
+      </div>
+      <GoogleAuthButton />
       <p className="text-sm text-center mt-4 text-gray-500">
         Already have an account? <Link to="/login" className="text-brand font-medium">Login</Link>
       </p>

@@ -66,6 +66,10 @@ npm run dev
   connection string, put it in `backend/.env` as `MONGO_URI`.
 - **Cloudinary**: create a free account at https://cloudinary.com, grab your cloud
   name/API key/secret from the dashboard, put them in `backend/.env`.
+- **Google Sign-In**: create a Google OAuth web client in Google Cloud Console. Set
+  `VITE_GOOGLE_CLIENT_ID` in `frontend/.env` and `GOOGLE_CLIENT_ID` in `backend/.env`
+  to the same client ID. Add your local and deployed frontend origins to the OAuth
+  client's authorized JavaScript origins.
 - After running `npm run seed`, log in as the super-admin using the email/password
   you set in `SUPER_ADMIN_EMAIL` / `SUPER_ADMIN_PASSWORD` (defaults to
   `admin@tfsclone.com` / `ChangeMe123!` — change this immediately).

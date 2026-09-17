@@ -7,11 +7,9 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import QuickViewModal from './QuickViewModal';
 
-const GUEST_WISHLIST_KEY = 'tfs_guest_wishlist';
-
 export default function ProductCard({ product }) {
   const { user } = useAuth();
-  const { addToCart } = useCart();
+  const { addToCart, requireAuth } = useCart();
   const navigate = useNavigate();
 
   const [inWishlist, setInWishlist] = useState(false);
@@ -33,38 +31,15 @@ export default function ProductCard({ product }) {
 
   // Check wishlist state
   useEffect(() => {
-    if (!user) {
-      try {
-        const saved = JSON.parse(localStorage.getItem(GUEST_WISHLIST_KEY) || '[]');
-        setInWishlist(saved.includes(product._id));
-      } catch {
-        setInWishlist(false);
-      }
-    }
+    if (!user) return;
+    setInWishlist(user.wishlist?.some((id) => String(id) === String(product._id)) || false);
   }, [product._id, user]);
 
   const toggleWishlist = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!user) {
-      try {
-        let saved = JSON.parse(localStorage.getItem(GUEST_WISHLIST_KEY) || '[]');
-        if (saved.includes(product._id)) {
-          saved = saved.filter((id) => id !== product._id);
-          setInWishlist(false);
-          toast.success('Removed from wishlist');
-        } else {
-          saved.push(product._id);
-          setInWishlist(true);
-          toast.success('Added to wishlist');
-        }
-        localStorage.setItem(GUEST_WISHLIST_KEY, JSON.stringify(saved));
-      } catch {
-        toast.error('Could not update wishlist');
-      }
-      return;
-    }
+    if (!requireAuth()) return;
 
     try {
       const res = await api.post('/wishlist/toggle', { productId: product._id });

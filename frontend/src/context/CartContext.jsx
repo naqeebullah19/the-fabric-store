@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../api/client';
 import { useAuth } from './AuthContext';
 
@@ -8,6 +9,8 @@ const LOCAL_CART_KEY = 'tfs_guest_cart_v1';
 
 export function CartProvider({ children }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [cart, setCart] = useState(() => {
     try {
       const saved = localStorage.getItem(LOCAL_CART_KEY);
@@ -19,7 +22,16 @@ export function CartProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const openCartDrawer = () => setIsDrawerOpen(true);
+  const requireAuth = useCallback(() => {
+    if (user) return true;
+    toast('Please log in to use your shopping bag.');
+    navigate('/login', { state: { from: location.pathname + location.search } });
+    return false;
+  }, [location.pathname, location.search, navigate, user]);
+
+  const openCartDrawer = () => {
+    if (requireAuth()) setIsDrawerOpen(true);
+  };
   const closeCartDrawer = () => setIsDrawerOpen(false);
   const toggleCartDrawer = () => setIsDrawerOpen((prev) => !prev);
 
@@ -90,67 +102,16 @@ export function CartProvider({ children }) {
   }, [user, refreshCart]);
 
   const addToCart = async (productId, variantId, quantity = 1, productSnapshot = null) => {
-    if (user) {
-      try {
-        const res = await api.post('/cart/items', { productId, variantId, quantity });
-        setCart(res.data);
-        toast.success('Added to bag!');
-        setIsDrawerOpen(true);
-        return true;
-      } catch (err) {
-        toast.error(err.response?.data?.message || 'Could not add to cart');
-        return false;
-      }
-    }
+    if (!requireAuth()) return false;
 
-    // Guest Cart flow
     try {
-      let product = productSnapshot;
-      if (!product) {
-        const res = await api.get(`/products/id/${productId}`).catch(() => null);
-        product = res?.data;
-      }
-      const variant = product?.variants?.find((v) => v._id === variantId) || product?.variants?.[0] || {
-        _id: variantId,
-        size: 'Standard',
-        color: 'Default',
-        stock: 99,
-      };
-
-      setCart((prev) => {
-        const items = [...(prev.items || [])];
-        const existingIdx = items.findIndex((i) => (i.variantId || i._id) === variantId);
-        if (existingIdx > -1) {
-          items[existingIdx] = {
-            ...items[existingIdx],
-            quantity: items[existingIdx].quantity + quantity,
-          };
-        } else {
-          items.push({
-            _id: 'guest-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
-            product: {
-              _id: product?._id || productId,
-              name: product?.name || 'Suit',
-              slug: product?.slug || '',
-              images: product?.images || [],
-              price: product?.price || 0,
-              compareAtPrice: product?.compareAtPrice || 0,
-            },
-            variantId: variant._id,
-            size: variant.size,
-            color: variant.color,
-            quantity,
-            priceAtAdd: product?.price || 0,
-          });
-        }
-        return { ...prev, items };
-      });
-
+      const res = await api.post('/cart/items', { productId, variantId, quantity });
+      setCart(res.data);
       toast.success('Added to bag!');
       setIsDrawerOpen(true);
       return true;
-    } catch {
-      toast.error('Could not add item to bag');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not add to cart');
       return false;
     }
   };
@@ -224,6 +185,7 @@ export function CartProvider({ children }) {
         freeShippingPercent,
         isDrawerOpen,
         openCartDrawer,
+        requireAuth,
         closeCartDrawer,
         toggleCartDrawer,
         addToCart,

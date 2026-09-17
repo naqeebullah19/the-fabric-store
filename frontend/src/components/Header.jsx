@@ -112,7 +112,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   const { user, logout, isAdmin } = useAuth();
-  const { itemCount, openCartDrawer } = useCart();
+  const { itemCount, openCartDrawer, requireAuth } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
   const searchRef = useRef(null);
@@ -281,6 +281,9 @@ export default function Header() {
           {/* Wishlist Link */}
           <Link
             to="/wishlist"
+            onClick={(event) => {
+              if (!requireAuth()) event.preventDefault();
+            }}
             className="p-2 hover:text-brand transition-colors text-lg relative"
             aria-label="Saved items"
           >

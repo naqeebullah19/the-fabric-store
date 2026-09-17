@@ -18,11 +18,9 @@ import { useAuth } from '../context/AuthContext';
 import StarRating from '../components/StarRating';
 import ProductCard from '../components/ProductCard';
 
-const GUEST_WISHLIST_KEY = 'tfs_guest_wishlist';
-
 export default function ProductDetail() {
   const { slug } = useParams();
-  const { addToCart } = useCart();
+  const { addToCart, requireAuth } = useCart();
   const { user } = useAuth();
 
   const [product, setProduct] = useState(null);
@@ -67,13 +65,8 @@ export default function ProductDetail() {
 
     api.get(`/reviews/product/${product._id}`).then((r) => setReviews(r.data)).catch(() => setReviews([]));
 
-    if (!user) {
-      try {
-        const saved = JSON.parse(localStorage.getItem(GUEST_WISHLIST_KEY) || '[]');
-        setInWishlist(saved.includes(product._id));
-      } catch {
-        setInWishlist(false);
-      }
+    if (user) {
+      setInWishlist(user.wishlist?.some((id) => String(id) === String(product._id)) || false);
     }
   }, [product, user]);
 
@@ -108,24 +101,7 @@ export default function ProductDetail() {
   };
 
   const toggleWishlist = async () => {
-    if (!user) {
-      try {
-        let saved = JSON.parse(localStorage.getItem(GUEST_WISHLIST_KEY) || '[]');
-        if (saved.includes(product._id)) {
-          saved = saved.filter((id) => id !== product._id);
-          setInWishlist(false);
-          toast.success('Removed from wishlist');
-        } else {
-          saved.push(product._id);
-          setInWishlist(true);
-          toast.success('Added to wishlist');
-        }
-        localStorage.setItem(GUEST_WISHLIST_KEY, JSON.stringify(saved));
-      } catch {
-        toast.error('Could not update wishlist');
-      }
-      return;
-    }
+    if (!requireAuth()) return;
 
     try {
       const res = await api.post('/wishlist/toggle', { productId: product._id });
